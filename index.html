@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcolatore Risparmio Fumo</title>
+    <style>
+        :root {
+            --apple-bg: #f5f5f7;
+            --apple-card: #ffffff;
+            --apple-accent: #0071e3;
+            --apple-text: #1d1d1f;
+            --apple-secondary: #86868b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--apple-bg);
+            color: var(--apple-text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .calculator-card {
+            background: var(--apple-card);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        h2 {
+            font-weight: 600;
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            color: var(--apple-secondary);
+            margin-bottom: 8px;
+            margin-left: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #d2d2d7;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            border-color: var(--apple-accent);
+        }
+
+        .results {
+            margin-top: 30px;
+            display: grid;
+            gap: 15px;
+        }
+
+        .result-item {
+            background: var(--apple-bg);
+            padding: 15px;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .result-item:hover {
+            transform: scale(1.02);
+        }
+
+        .timeframe {
+            font-size: 12px;
+            color: var(--apple-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .amount {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--apple-accent);
+            margin-top: 5px;
+        }
+
+        /* Barra di Progresso "Salute & Portafoglio" */
+        .progress-container {
+            margin-top: 30px;
+            height: 8px;
+            background: #e5e5e7;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #0071e3, #42f5a4);
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .cta-button {
+            margin-top: 30px;
+            display: inline-block;
+            background: var(--apple-accent);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: opacity 0.2s;
+        }
+
+        .cta-button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator-card">
+    <h2>Quanto risparmi se smetti?</h2>
+    
+    <div class="input-group">
+        <label for="packs">Pacchetti al mese</label>
+        <input type="number" id="packs" placeholder="Es: 20" oninput="calculate()">
+    </div>
+
+    <div class="input-group">
+        <label for="price">Costo per pacchetto (€)</label>
+        <input type="number" id="price" placeholder="Es: 6.00" step="0.10" oninput="calculate()">
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-bar" id="bar"></div>
+    </div>
+
+    <div class="results">
+        <div class="result-item">
+            <div class="timeframe">In 1 Anno</div>
+            <div class="amount" id="year1">€ 0</div>
+        </div>
+        <div class="result-item">
+            <div class="timeframe">In 5 Anni</div>
+            <div class="amount" id="year5">€ 0</div>
+        </div>
+        <div class="result-item">
+            <div class="timeframe">In 10 Anni (Investiti*)</div>
+            <div class="amount" id="year10">€ 0</div>
+        </div>
+    </div>
+
+    <a href="IL_TUO_LINK_AFFILIATO" class="cta-button">Scopri come investire questi soldi</a>
+</div>
+
+<script>
+    function calculate() {
+        const packs = document.getElementById('packs').value;
+        const price = document.getElementById('price').value;
+        const bar = document.getElementById('bar');
+
+        if (packs > 0 && price > 0) {
+            const monthlySave = packs * price;
+            const y1 = monthlySave * 12;
+            const y5 = y1 * 5;
+            
+            // Calcolo 10 anni con un ipotetico interesse composto del 4% (se investiti)
+            // Formula semplificata: M = P * (((1 + i)^n - 1) / i)
+            const monthlyRate = 0.04 / 12;
+            const months = 120;
+            const y10Invested = monthlySave * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate);
+
+            // Aggiorna Testi
+            document.getElementById('year1').innerText = `€ ${y1.toLocaleString('it-IT', {maximumFractionDigits: 0})}`;
+            document.getElementById('year5').innerText = `€ ${y5.toLocaleString('it-IT', {maximumFractionDigits: 0})}`;
+            document.getElementById('year10').innerText = `€ ${y10Invested.toLocaleString('it-IT', {maximumFractionDigits: 0})}`;
+
+            // Anima la barra (max 50.000€ per il pieno)
+            let progress = (y10Invested / 50000) * 100;
+            bar.style.width = Math.min(progress, 100) + "%";
+        } else {
+            document.getElementById('year1').innerText = "€ 0";
+            document.getElementById('year5').innerText = "€ 0";
+            document.getElementById('year10').innerText = "€ 0";
+            bar.style.width = "0%";
+        }
+    }
+</script>
+
+</body>
+</html>
